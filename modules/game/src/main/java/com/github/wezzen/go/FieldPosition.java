@@ -2,12 +2,18 @@ package com.github.wezzen.go;
 
 import java.util.Objects;
 
+/**
+ * Position on field at x, y cord. Position might be empty of belongs to a {@link StoneChain} of stones.
+ */
 public class FieldPosition {
 
     public final int x;
 
     public final int y;
 
+    /**
+     * StoneChain which belongs this position on field.
+     */
     private StoneChain chain = null;
 
     public FieldPosition(final int x, final int y) {
