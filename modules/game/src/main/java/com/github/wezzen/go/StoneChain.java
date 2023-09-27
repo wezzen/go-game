@@ -21,6 +21,10 @@ public class StoneChain {
         id = igGenerator.getAndIncrement();
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void addStone(final FieldPosition position) {
         stones.add(position);
         position.setChain(this);

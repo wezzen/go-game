@@ -24,6 +24,11 @@ public class FieldPosition {
     }
 
     @Override
+    public String toString() {
+        return "{x: " + x + ", y: " + y + (chain == null ? ", empty}" : ", chain: " + chain.getId() + "}");
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o)
             return true;
