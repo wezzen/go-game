@@ -13,9 +13,9 @@ public class Game implements GameListener {
 
     private static final int WHITE_PLAYER_ID = 1;
 
-    private final Player[] players = new Player[NUM_PLAYERS];
+    private final PlayerInfo[] playerInfos = new PlayerInfo[NUM_PLAYERS];
 
-    private final Map<String, Player> playersByName = new HashMap<>();
+    private final Map<String, PlayerInfo> playersByName = new HashMap<>();
 
     private final boolean[] passes = new boolean[NUM_PLAYERS];
 
@@ -30,7 +30,7 @@ public class Game implements GameListener {
     }
 
     private void reset() {
-        Arrays.fill(players, null);
+        Arrays.fill(playerInfos, null);
         Arrays.fill(passes, false);
         playersByName.clear();
         nextPlayerToActId = BLACK_PLAYER_ID;
@@ -41,7 +41,7 @@ public class Game implements GameListener {
         return color == Color.BLACK ? BLACK_PLAYER_ID : WHITE_PLAYER_ID;
     }
 
-    private Player getPlayerByName(final String name) {
+    private PlayerInfo getPlayerByName(final String name) {
         return playersByName.computeIfAbsent(name, (key) -> {
             throw new IllegalArgumentException("There is no player with name " + key);
         });
@@ -56,12 +56,12 @@ public class Game implements GameListener {
     @Override
     public void playerJoin(final String name, final Color color) {
         final int playerId = getPlayerId(color);
-        if (Objects.nonNull(players[playerId])) {
+        if (Objects.nonNull(playerInfos[playerId])) {
             throw new IllegalArgumentException("There is another player in game with color " + color.name());
         }
-        final Player player = new Player(playerId, name, color);
-        players[playerId] = player;
-        playersByName.put(name, player);
+        final PlayerInfo playerInfo = new PlayerInfo(playerId, name, color);
+        playerInfos[playerId] = playerInfo;
+        playersByName.put(name, playerInfo);
     }
 
     @Override
@@ -69,20 +69,20 @@ public class Game implements GameListener {
         if (!isGameActive) {
             throw new IllegalStateException("Game is already over.");
         }
-        final Player player = getPlayerByName(name);
-        if (!player.equals(players[nextPlayerToActId])) {
+        final PlayerInfo playerInfo = getPlayerByName(name);
+        if (!playerInfo.equals(playerInfos[nextPlayerToActId])) {
             throw new IllegalStateException(String.format("Expected act from %s, but got from %s",
-                    players[nextPlayerToActId], player));
+                    playerInfos[nextPlayerToActId], playerInfo));
         }
-        gameField.addStone(action.x, action.y, player.color);
-        passes[player.id] = false;
+        gameField.addStone(action.x, action.y, playerInfo.color);
+        passes[playerInfo.id] = false;
         nextPlayerToActId = (nextPlayerToActId + 1) % NUM_PLAYERS;
     }
 
     @Override
     public void playerPasses(final String name) {
-        final Player player = getPlayerByName(name);
-        passes[player.id] = true;
+        final PlayerInfo playerInfo = getPlayerByName(name);
+        passes[playerInfo.id] = true;
         if (Arrays.equals(new boolean[] {true, true}, passes)) {
             isGameActive = false;
         }
