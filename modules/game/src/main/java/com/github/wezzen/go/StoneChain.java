@@ -14,10 +14,10 @@ public class StoneChain {
 
     private final Set<FieldPosition> liberties = new HashSet<>();
 
-    private final Player owner;
+    private final Color color;
 
-    public StoneChain(final Player owner) {
-        this.owner = owner;
+    public StoneChain(final Color color) {
+        this.color = color;
         id = igGenerator.getAndIncrement();
     }
 
@@ -42,8 +42,8 @@ public class StoneChain {
         return liberties.size();
     }
 
-    public Player getOwner() {
-        return owner;
+    public Color getColor() {
+        return color;
     }
 
 }
