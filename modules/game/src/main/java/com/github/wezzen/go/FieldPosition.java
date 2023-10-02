@@ -29,6 +29,10 @@ public class FieldPosition {
         return chain;
     }
 
+    public boolean isEmpty() {
+        return chain == null;
+    }
+
     @Override
     public String toString() {
         return "{x: " + x + ", y: " + y + (chain == null ? ", empty}" : ", chain: " + chain.getId() + "}");
@@ -41,11 +45,11 @@ public class FieldPosition {
         if (o == null || getClass() != o.getClass())
             return false;
         final FieldPosition that = (FieldPosition) o;
-        return x == that.x && y == that.y && Objects.equals(chain, that.chain);
+        return x == that.x && y == that.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, chain);
+        return Objects.hash(x, y);
     }
 }

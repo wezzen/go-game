@@ -30,8 +30,28 @@ public class StoneChain {
         position.setChain(this);
     }
 
+    public void addStone(final Set<FieldPosition> positions) {
+        positions.forEach(this::addStone);
+    }
+
     public void addLiberty(final FieldPosition position) {
         liberties.add(position);
+    }
+
+    public void addLiberty(final Set<FieldPosition> positions) {
+        liberties.addAll(positions);
+    }
+
+    public Set<FieldPosition> getLiberties() {
+        return liberties;
+    }
+
+    public Set<FieldPosition> getStones() {
+        return stones;
+    }
+
+    public void removeLiberty(final FieldPosition position) {
+        liberties.remove(position);
     }
 
     public int getNumStones() {

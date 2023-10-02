@@ -16,4 +16,11 @@ class FieldPositionTest {
         assertNull(fieldPosition.getChain());
     }
 
+    @Test
+    void comparePositionsTest() {
+        final FieldPosition fieldPosition = new FieldPosition(5, 5);
+        assertNotEquals(fieldPosition, new Object());
+        assertEquals(fieldPosition, fieldPosition);
+    }
+
 }
