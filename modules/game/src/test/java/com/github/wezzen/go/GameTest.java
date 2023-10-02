@@ -2,20 +2,21 @@ package com.github.wezzen.go;
 
 import org.junit.jupiter.api.Test;
 
+import static com.github.wezzen.go.Game.DEFAULT_GAME_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
-    private static final int GAME_SIZE = 9;
+
 
     @Test
     void creatingTest() {
-        assertDoesNotThrow(() -> new Game(GAME_SIZE));
+        assertDoesNotThrow(() -> new Game(DEFAULT_GAME_SIZE));
     }
 
     @Test
     void gameThrowsTest() {
-        final Game game = new Game(GAME_SIZE);
+        final Game game = new Game(DEFAULT_GAME_SIZE);
         game.startGame();
         game.playerJoin("Player1", Color.BLACK);
         assertThrows(IllegalArgumentException.class, () -> game.playerJoin("Player2", Color.BLACK));

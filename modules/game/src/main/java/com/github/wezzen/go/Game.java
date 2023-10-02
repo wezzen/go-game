@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class Game implements GameListener {
 
+    public static final int DEFAULT_GAME_SIZE = 9;
+
     public static final int NUM_PLAYERS = 2;
 
     private static final int BLACK_PLAYER_ID = 0;
