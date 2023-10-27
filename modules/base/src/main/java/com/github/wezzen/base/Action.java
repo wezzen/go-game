@@ -1,4 +1,4 @@
-package com.github.wezzen.go;
+package com.github.wezzen.base;
 
 public class Action {
     public final int x;

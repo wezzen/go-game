@@ -1,5 +1,9 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Action;
+import com.github.wezzen.base.Color;
+import com.github.wezzen.base.GameListener;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +35,10 @@ public class Game implements GameListener {
         this.gameField = new GameField(gameSize);
     }
 
+    public Game getCopy() {
+        return new Game(gameField.gameSize);
+    }
+
     private void reset() {
         Arrays.fill(playerInfos, null);
         Arrays.fill(passes, false);
@@ -43,10 +51,18 @@ public class Game implements GameListener {
         return color == Color.BLACK ? BLACK_PLAYER_ID : WHITE_PLAYER_ID;
     }
 
+    public int getGameSize() {
+        return gameField.gameSize;
+    }
+
     private PlayerInfo getPlayerByName(final String name) {
         return playersByName.computeIfAbsent(name, (key) -> {
             throw new IllegalArgumentException("There is no player with name " + key);
         });
+    }
+
+    public GameField getGameField() {
+        return gameField;
     }
 
     @Override
@@ -88,6 +104,7 @@ public class Game implements GameListener {
         if (Arrays.equals(new boolean[] {true, true}, passes)) {
             isGameActive = false;
         }
+        nextPlayerToActId = (nextPlayerToActId + 1) % NUM_PLAYERS;
     }
 
     @Override
@@ -96,5 +113,13 @@ public class Game implements GameListener {
             throw new IllegalStateException("Game is still active.");
         }
         //todo find winner.
+    }
+
+    public boolean isGameActive() {
+        return isGameActive;
+    }
+
+    public int getNextPlayerToActId() {
+        return nextPlayerToActId;
     }
 }

@@ -1,5 +1,7 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Color;
+
 /**
  * Info about player.
  */

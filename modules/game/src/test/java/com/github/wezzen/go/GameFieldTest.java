@@ -1,5 +1,6 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Color;
 import com.github.wezzen.exception.GameException;
 import org.junit.jupiter.api.Test;
 

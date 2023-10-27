@@ -1,5 +1,6 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Color;
 import com.github.wezzen.errors.Error;
 import com.github.wezzen.exception.GameException;
 
@@ -13,10 +14,22 @@ public class GameField {
 
     public final int gameSize;
 
+    private int emptyPlaces;
+
+    private int filedPlaces;
+
     public GameField(final int gameSize) {
         this.gameSize = gameSize;
         matrix = new FieldPosition[gameSize][gameSize];
         reset();
+    }
+
+    public int getNumPlacedStones() {
+        return filedPlaces;
+    }
+
+    public int getNumEmptyPlaces() {
+        return emptyPlaces;
     }
 
     void reset() {
@@ -25,6 +38,8 @@ public class GameField {
                 matrix[x][y] = new FieldPosition(x, y);
             }
         }
+        emptyPlaces = gameSize * gameSize;
+        filedPlaces = 0;
     }
 
     private Set<FieldPosition> findPositionsByFilter(final FieldPosition position, Predicate<FieldPosition> predicate) {
@@ -81,10 +96,23 @@ public class GameField {
         chain.addLiberty(nearEmptyPositions);
         chain.removeLiberty(position);
         matrix[x][y] = position;
+        filedPlaces++;
+        emptyPlaces--;
     }
 
     public FieldPosition getStone(final int x, final int y) {
         return matrix[x][y];
+    }
+
+    public boolean isActionAvailable(final int x, final int y) {
+        if (!isInField(x, y)) {
+            return false;
+        }
+        if (!matrix[x][y].isEmpty()) {
+            return false;
+        }
+        final Set<FieldPosition> nearEmptyPositions = findNearEmptyPositions(new FieldPosition(x, y));
+        return !nearEmptyPositions.isEmpty();
     }
 
 }

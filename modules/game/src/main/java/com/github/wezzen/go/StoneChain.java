@@ -1,5 +1,7 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Color;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;

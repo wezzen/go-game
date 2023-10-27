@@ -1,5 +1,6 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

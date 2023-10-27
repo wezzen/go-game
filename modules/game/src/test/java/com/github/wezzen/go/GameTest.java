@@ -1,5 +1,7 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Action;
+import com.github.wezzen.base.Color;
 import org.junit.jupiter.api.Test;
 
 import static com.github.wezzen.go.Game.DEFAULT_GAME_SIZE;
