@@ -23,10 +23,6 @@ public class RandomBot extends Bot {
         super(game, color);
     }
 
-    public RandomBot(final RandomBot bot) {
-        super(bot);
-    }
-
     private Answer.Type chooseAction() {
         final int emptyNum = game.getGameField().getNumEmptyPlaces();
         final int filledNum = game.getGameField().getNumPlacedStones();
