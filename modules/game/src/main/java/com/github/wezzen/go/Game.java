@@ -65,6 +65,10 @@ public class Game implements GameListener {
         return gameField;
     }
 
+    private void nextPlayer() {
+        nextPlayerToActId = (nextPlayerToActId + 1) % NUM_PLAYERS;
+    }
+
     @Override
     public void startGame() {
         reset();
@@ -94,7 +98,7 @@ public class Game implements GameListener {
         }
         gameField.addStone(action.x, action.y, playerInfo.color);
         passes[playerInfo.id] = false;
-        nextPlayerToActId = (nextPlayerToActId + 1) % NUM_PLAYERS;
+        nextPlayer();
     }
 
     @Override
@@ -104,7 +108,7 @@ public class Game implements GameListener {
         if (Arrays.equals(new boolean[] {true, true}, passes)) {
             isGameActive = false;
         }
-        nextPlayerToActId = (nextPlayerToActId + 1) % NUM_PLAYERS;
+        nextPlayer();
     }
 
     @Override
