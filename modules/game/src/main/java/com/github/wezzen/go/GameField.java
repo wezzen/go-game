@@ -67,7 +67,7 @@ public class GameField {
         return x >= 0 && x < gameSize && y >= 0 && y < gameSize;
     }
 
-    public void addStone(final int x, final int y, final Color color) {
+    public void addStone(final int x, final int y, final Color color, final CapturedStones capturedStones) {
         if (!isInField(x, y)) {
             throw new GameException(Error.WRONG_FIELD_POSITION, String.format("Wrong field position at [%d:%d]", x, y));
         }
@@ -76,10 +76,11 @@ public class GameField {
         }
         final FieldPosition position = new FieldPosition(x, y);
         final Set<FieldPosition> nearEmptyPositions = findNearEmptyPositions(position);
-        if (nearEmptyPositions.isEmpty()) {
+        final Set<FieldPosition> nearStones = findNearNotEmptyPositions(position);
+        if (nearEmptyPositions.isEmpty() && nearStones.stream().noneMatch((stone) -> stone.getChain().getColor() == color)) {
             throw new GameException(Error.SUICIDE_ACTION, String.format("Suicide action at position [%d:%d]", x, y));
         }
-        final Set<FieldPosition> nearStones = findNearNotEmptyPositions(position);
+
         final StoneChain chain = new StoneChain(color);
         for (final FieldPosition near : nearStones) {
             final StoneChain nearChain = near.getChain();
@@ -90,6 +91,10 @@ public class GameField {
             } else {
                 // opponent stone
                 nearChain.removeLiberty(position);
+                if (nearChain.getNumLiberties() == 0) {
+                    capturedStones.addCapturedStone(nearChain.getStones());
+                    nearChain.free();
+                }
             }
         }
         chain.addStone(position);

@@ -32,6 +32,12 @@ public class StoneChain {
         position.setChain(this);
     }
 
+    public void free() {
+        for (final FieldPosition stone : stones) {
+            stone.removeChain();
+        }
+    }
+
     public void addStone(final Set<FieldPosition> positions) {
         positions.forEach(this::addStone);
     }

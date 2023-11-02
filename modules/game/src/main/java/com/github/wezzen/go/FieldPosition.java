@@ -25,6 +25,10 @@ public class FieldPosition {
         this.chain = chain;
     }
 
+    public void removeChain() {
+        setChain(null);
+    }
+
     public StoneChain getChain() {
         return chain;
     }

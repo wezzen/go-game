@@ -96,7 +96,7 @@ public class Game implements GameListener {
             throw new IllegalStateException(String.format("Expected act from %s, but got from %s",
                     playerInfos[nextPlayerToActId], playerInfo));
         }
-        gameField.addStone(action.x, action.y, playerInfo.color);
+        gameField.addStone(action.x, action.y, playerInfo.color, playerInfo.getCapturedStones());
         passes[playerInfo.id] = false;
         nextPlayer();
     }
