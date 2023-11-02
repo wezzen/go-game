@@ -6,7 +6,9 @@ import com.github.wezzen.base.GoPlayer;
 import com.github.wezzen.bots.base.Bot;
 import com.github.wezzen.bots.random.RandomBot;
 import com.github.wezzen.go.Game;
+import com.github.wezzen.go.writers.GameWriter;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class Selfplay {
@@ -25,16 +27,18 @@ public class Selfplay {
         this.factories = factories;
     }
 
-    public void playSomeGames(final int numGames) {
+    public void playSomeGames(final int numGames) throws IOException {
         final Player[] players = new Player[Game.NUM_PLAYERS];
+        final GameWriter writer = new GameWriter("selfplay.log");
         for (int gameId = 0; gameId < numGames; gameId++) {
             final Bot blackBot = factories[0].createBot(game, Color.BLACK);
             final Bot whiteBot = factories[1].createBot(game, Color.WHITE);
             final GameGroup gameGroup = new GameGroup(game);
+            gameGroup.add(writer);
             gameGroup.add(blackBot);
             gameGroup.add(whiteBot);
-            players[0] = new Player(UUID.randomUUID().toString(), blackBot);
-            players[1] = new Player(UUID.randomUUID().toString(), whiteBot);
+            players[0] = new Player("BLACK", blackBot);
+            players[1] = new Player("WHITE", whiteBot);
             gameGroup.startGame();
             gameGroup.playerJoin(players[0].name, Color.BLACK);
             gameGroup.playerJoin(players[1].name, Color.WHITE);
@@ -49,7 +53,8 @@ public class Selfplay {
                 }
             }
             gameGroup.gameOver();
-            System.out.printf("ends %d game of %d\n", gameId, numGames);
+            writer.flush();
+            System.out.printf("ends %d game of %d\n", gameId + 1, numGames);
         }
     }
 
@@ -63,7 +68,7 @@ public class Selfplay {
         }
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
         final int gameSize = Integer.parseInt(args[0]);
         final int numGames = Integer.parseInt(args[1]);
         final Selfplay selfplay = new Selfplay(gameSize, new Bot.BotFactory[]{

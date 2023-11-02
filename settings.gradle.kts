@@ -18,4 +18,6 @@ project(":selfplay").projectDir = file("modules/selfplay")
 include("random-bot")
 project(":random-bot").projectDir = file("modules/bots/random")
 
+include("writers")
+project(":writers").projectDir = file("modules/writers")
 
