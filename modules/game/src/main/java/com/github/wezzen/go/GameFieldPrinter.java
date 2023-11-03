@@ -44,7 +44,7 @@ public class GameFieldPrinter extends GameListenerAdapter {
         this.gameSize = gameSize;
     }
 
-    private StringBuilder buildStringField(final int size) {
+    private static StringBuilder buildStringField(final int size) {
         final StringBuilder builder = new StringBuilder();
         for (int y = 0; y < size; y++) {
             if (y == 0) {
@@ -76,7 +76,7 @@ public class GameFieldPrinter extends GameListenerAdapter {
         return builder;
     }
 
-    private int calculateIndexToInsert(final Action action) {
+    private static int calculateIndexToInsert(final int gameSize, final Action action) {
         return action.y * (gameSize * 3 - 1) + (action.x * 3);
     }
 
@@ -112,8 +112,24 @@ public class GameFieldPrinter extends GameListenerAdapter {
         final String color = playerToColorMap.computeIfAbsent(name, (playerName) -> {
             throw new IllegalArgumentException(String.format("Player with name [%s] is unknown", playerName));
         });
-        final int index = calculateIndexToInsert(action);
+        final int index = calculateIndexToInsert(gameSize, action);
         stringBuilder.deleteCharAt(index);
         stringBuilder.insert(index, color);
+    }
+
+    public static String printGameField(final GameField field) {
+        final StringBuilder builder = buildStringField(field.gameSize);
+        for (int y = 0; y < field.gameSize; y++) {
+            for (int x = 0; x < field.gameSize; x++) {
+                final FieldPosition position = field.getStone(x, y);
+                if (!position.isEmpty()) {
+                    final String stringColor = position.getChain().getColor() == Color.BLACK ? BLACK_STONE : WHITE_STONE;
+                    final int index = calculateIndexToInsert(field.gameSize, new Action(x, y));
+                    builder.deleteCharAt(index);
+                    builder.insert(index, stringColor);
+                }
+            }
+        }
+        return builder.toString();
     }
 }

@@ -45,6 +45,7 @@ public class Game implements GameListener {
         playersByName.clear();
         nextPlayerToActId = BLACK_PLAYER_ID;
         isGameActive = false;
+        gameField.reset();
     }
 
     private int getPlayerId(final Color color) {

@@ -1,10 +1,13 @@
 package com.github.wezzen.go;
 
+import com.github.wezzen.base.Action;
 import com.github.wezzen.base.Color;
 import com.github.wezzen.errors.Error;
 import com.github.wezzen.exception.GameException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -14,22 +17,10 @@ public class GameField {
 
     public final int gameSize;
 
-    private int emptyPlaces;
-
-    private int filedPlaces;
-
     public GameField(final int gameSize) {
         this.gameSize = gameSize;
         matrix = new FieldPosition[gameSize][gameSize];
         reset();
-    }
-
-    public int getNumPlacedStones() {
-        return filedPlaces;
-    }
-
-    public int getNumEmptyPlaces() {
-        return emptyPlaces;
     }
 
     void reset() {
@@ -38,8 +29,6 @@ public class GameField {
                 matrix[x][y] = new FieldPosition(x, y);
             }
         }
-        emptyPlaces = gameSize * gameSize;
-        filedPlaces = 0;
     }
 
     private Set<FieldPosition> findPositionsByFilter(final FieldPosition position, Predicate<FieldPosition> predicate) {
@@ -84,6 +73,9 @@ public class GameField {
         final StoneChain chain = new StoneChain(color);
         for (final FieldPosition near : nearStones) {
             final StoneChain nearChain = near.getChain();
+            if (nearChain == null) {
+                continue;
+            }
             if (nearChain.getColor() == color) {
                 // friendly stone
                 chain.addLiberty(nearChain.getLiberties());
@@ -101,23 +93,35 @@ public class GameField {
         chain.addLiberty(nearEmptyPositions);
         chain.removeLiberty(position);
         matrix[x][y] = position;
-        filedPlaces++;
-        emptyPlaces--;
     }
 
     public FieldPosition getStone(final int x, final int y) {
         return matrix[x][y];
     }
 
-    public boolean isActionAvailable(final int x, final int y) {
+    private boolean isActionAvailable(final int x, final int y, final Color color) {
         if (!isInField(x, y)) {
             return false;
         }
         if (!matrix[x][y].isEmpty()) {
             return false;
         }
-        final Set<FieldPosition> nearEmptyPositions = findNearEmptyPositions(new FieldPosition(x, y));
-        return !nearEmptyPositions.isEmpty();
+        final FieldPosition position = new FieldPosition(x, y);
+        final Set<FieldPosition> nearEmptyPositions = findNearEmptyPositions(position);
+        final Set<FieldPosition> nearStones = findNearNotEmptyPositions(position);
+        return !nearEmptyPositions.isEmpty() || nearStones.stream().anyMatch((stone) -> stone.getChain().getColor() == color);
+    }
+
+    public List<Action> getAvailableActions(final Color color) {
+        final List<Action> available = new ArrayList<>();
+        for (int x = 0; x < gameSize; x++) {
+            for (int y = 0; y < gameSize; y++) {
+                if (isActionAvailable(x, y, color)) {
+                    available.add(new Action(x, y));
+                }
+            }
+        }
+        return available;
     }
 
 }

@@ -7,6 +7,8 @@ import com.github.wezzen.bots.base.Bot;
 import com.github.wezzen.go.Game;
 import com.github.wezzen.go.GameField;
 
+import java.util.List;
+
 public class RandomBot extends Bot {
 
     public static class RandomBotFactory extends BotFactory {
@@ -19,14 +21,14 @@ public class RandomBot extends Bot {
 
     private static final String NAME = RandomBot.class.getSimpleName();
 
+    private int totalMoves;
+
     public RandomBot(final Game game, final Color color) {
         super(game, color);
     }
 
     private Answer.Type chooseAction() {
-        final int emptyNum = game.getGameField().getNumEmptyPlaces();
-        final int filledNum = game.getGameField().getNumPlacedStones();
-        final double p = (double) filledNum / emptyNum;
+        final double p = (double) totalMoves / (game.getGameSize() * game.getGameSize());
         return p > Math.random() ? Answer.Type.PASS : Answer.Type.ACTION;
     }
 
@@ -36,17 +38,30 @@ public class RandomBot extends Bot {
     }
 
     @Override
+    public void startGame() {
+        super.startGame();
+        totalMoves = 0;
+    }
+
+    @Override
+    public void playerActed(final String name, final Action action) {
+        super.playerActed(name, action);
+        totalMoves++;
+    }
+
+    @Override
     public Answer getAnswer() {
         final Answer.Type type = chooseAction();
         switch (type) {
             case ACTION -> {
                 final GameField field = game.getGameField();
-                final int gameSize = game.getGameSize();
-                int x, y;
-                do {
-                    x = getRandom(0, gameSize - 1);
-                    y = getRandom(0, gameSize - 1);
-                } while (!field.isActionAvailable(x, y));
+                final List<Action> availableActions = field.getAvailableActions(color);
+                if (availableActions.size() == 0) {
+                    return new Answer(Answer.Type.PASS, null);
+                }
+                final int random = getRandom(0, availableActions.size() - 1);
+                final int x = availableActions.get(random).x;
+                final int y = availableActions.get(random).y;
                 return new Answer(Answer.Type.ACTION, new Action(x, y));
             }
             case PASS -> {
