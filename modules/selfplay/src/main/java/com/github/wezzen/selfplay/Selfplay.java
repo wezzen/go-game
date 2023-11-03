@@ -6,16 +6,18 @@ import com.github.wezzen.base.GoPlayer;
 import com.github.wezzen.bots.base.Bot;
 import com.github.wezzen.bots.random.RandomBot;
 import com.github.wezzen.go.Game;
+import com.github.wezzen.go.GameFieldPrinter;
 import com.github.wezzen.go.writers.GameWriter;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class Selfplay {
 
     private final Game game;
 
     private final Bot.BotFactory[] factories;
+
+    private final GameFieldPrinter fieldPrinter;
 
     public Selfplay(final int gameSize, final Bot.BotFactory[] factories) {
         game = new Game(gameSize);
@@ -25,11 +27,12 @@ public class Selfplay {
             );
         }
         this.factories = factories;
+        fieldPrinter = new GameFieldPrinter(game.getGameField().gameSize);
     }
 
     public void playSomeGames(final int numGames) throws IOException {
         final Player[] players = new Player[Game.NUM_PLAYERS];
-        final GameWriter writer = new GameWriter("selfplay.log");
+        final GameWriter writer = new GameWriter("selfplay.log", fieldPrinter);
         for (int gameId = 0; gameId < numGames; gameId++) {
             final Bot blackBot = factories[0].createBot(game, Color.BLACK);
             final Bot whiteBot = factories[1].createBot(game, Color.WHITE);
