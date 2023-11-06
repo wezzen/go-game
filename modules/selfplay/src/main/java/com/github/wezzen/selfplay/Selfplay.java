@@ -10,6 +10,7 @@ import com.github.wezzen.go.GameFieldPrinter;
 import com.github.wezzen.go.writers.GameWriter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class Selfplay {
 
@@ -40,8 +41,8 @@ public class Selfplay {
             gameGroup.add(writer);
             gameGroup.add(blackBot);
             gameGroup.add(whiteBot);
-            players[0] = new Player("BLACK", blackBot);
-            players[1] = new Player("WHITE", whiteBot);
+            players[0] = new Player(UUID.randomUUID().toString(), blackBot);
+            players[1] = new Player(UUID.randomUUID().toString(), whiteBot);
             gameGroup.startGame();
             gameGroup.playerJoin(players[0].name, Color.BLACK);
             gameGroup.playerJoin(players[1].name, Color.WHITE);
